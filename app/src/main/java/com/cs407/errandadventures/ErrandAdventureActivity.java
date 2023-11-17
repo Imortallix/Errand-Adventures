@@ -4,11 +4,11 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class AdventureInputActivity extends AppCompatActivity {
+public class ErrandAdventureActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.adventure_input_activity);
+        setContentView(R.layout.errand_adventure_activity);
     }
 }
