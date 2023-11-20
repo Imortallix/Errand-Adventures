@@ -7,13 +7,10 @@
     android:orientation="vertical"
     tools:context=".ErrandAdventureActivity">
 
-    <LinearLayout
-        android:id="@+id/fragmentLayout"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
         android:layout_width="match_parent"
-        android:layout_height="668dp"
-        android:orientation="vertical">
-
-    </LinearLayout>
+        android:layout_height="664dp" />
 
     <LinearLayout
         android:id="@+id/buttonsLayout"

@@ -3,22 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal|center_vertical"
     android:orientation="vertical"
-    tools:context=".destinationsFragment">
+    tools:context=".Destinations" >
 
-    <TextView
-        android:id="@+id/destinationText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Input Your Adventure!"
-        android:textAlignment="center"
-        android:textSize="48sp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="672dp">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/listView"/>
+    </RelativeLayout>
 
     <Button
-        android:id="@+id/addDestinationButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Destination +"
-        android:textSize="34sp" />
+        android:id="@+id/button3"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="Add Destination" />
 </LinearLayout>
