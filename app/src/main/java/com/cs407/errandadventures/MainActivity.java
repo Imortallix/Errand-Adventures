@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sp = getSharedPreferences("com.cs407.lab5_milestone1", Context.MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE);
         String un = sp.getString("username", "");
         if(un != "") {
             secondPage(un);
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     public void clickFunction(View view) {
         EditText edit = (EditText) findViewById(R.id.editTextText);
         String s = edit.getText().toString();
-        SharedPreferences sp = getSharedPreferences("com.cs407.lab5_milestone1", Context.MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE);
         sp.edit().putString("username", s).apply();
         secondPage(s);
     }
