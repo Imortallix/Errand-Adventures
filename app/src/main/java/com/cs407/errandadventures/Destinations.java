@@ -2,15 +2,18 @@ package com.cs407.errandadventures;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,7 +31,7 @@ public class Destinations extends Fragment {
 
     ArrayAdapter<String> adapter;
 
-    String[] tasks;
+    ArrayList<String> displayList = new ArrayList<>();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -63,9 +66,10 @@ public class Destinations extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
     }
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,15 +78,31 @@ public class Destinations extends Fragment {
         return inflater.inflate(R.layout.fragment_destinations, container, false);
     }
 
-    public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
-        listView = v.findViewById(R.id.listView);
-        adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.select_dialog_multichoice, tasks);
+
+
+
+
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        Button addDest = view.findViewById(R.id.button);
+        addDest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText location = (EditText) getView().findViewById(R.id.location);
+                String l = location.getText().toString();
+                displayList.add(l);
+            }
+        });
+        listView = view.findViewById(R.id.list);
+        adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, displayList);
+        System.out.println(displayList);
         listView.setAdapter(adapter);
     }
-
+/*
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         return super.onOptionsItemSelected(item);
     }
+     */
 }
