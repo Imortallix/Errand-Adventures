@@ -5,43 +5,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Destinations" >
-    <!--
-        <RelativeLayout
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="615dp">
+
+        <ListView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="672dp">
+            android:layout_height="567dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="9dp" />
 
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/listView"/>
-        </RelativeLayout>
-        -->
-
-    <EditText
-        android:id="@+id/location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:hint="location"
-        />
-
-    <EditText
-        android:id="@+id/story"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="story" />
+    </RelativeLayout>
 
     <Button
-            android:id="@+id/button"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:text="Add Destination"
-            android:onClick="addDest"/>
-
-    <ListView
-        android:id="@+id/list"
+        android:id="@+id/addDestination"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="44dp"
+        android:text="Add Destination" />
+
 </LinearLayout>

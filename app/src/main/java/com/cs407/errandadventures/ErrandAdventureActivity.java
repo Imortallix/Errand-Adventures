@@ -16,69 +16,63 @@ import androidx.fragment.app.FragmentManager;
 
 public class ErrandAdventureActivity extends AppCompatActivity {
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.errand_adventure_activity);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        Button destinationstButton = findViewById(R.id.destinationsButton);
-        destinationstButton.setOnClickListener(new View.OnClickListener() {
+        FragmentManager fg = getSupportFragmentManager();
+        Button frag1 = findViewById(R.id.destinationsButton);
+        Button frag2 = findViewById(R.id.mapButton);
+        Button frag3 = findViewById(R.id.storyButton);
+        frag1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                fragmentManager.beginTransaction()
+            public void onClick(View view) {
+                fg.beginTransaction()
                         .replace(R.id.fragmentContainerView, Destinations.class, null)
                         .setReorderingAllowed(true)
-                        .addToBackStack("Showing First")
+                        .addToBackStack("showingDestination")
                         .commit();
             }
         });
 
-        Button mapButton = findViewById(R.id.mapButton);
-        mapButton.setOnClickListener(new View.OnClickListener() {
+        frag2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                fragmentManager.beginTransaction()
+            public void onClick(View view) {
+                fg.beginTransaction()
                         .replace(R.id.fragmentContainerView, mapFragment.class, null)
                         .setReorderingAllowed(true)
-                        .addToBackStack("Showing Second")
+                        .addToBackStack("showingMap")
                         .commit();
             }
         });
 
-        Button storyButton = findViewById(R.id.storyButton);
-        storyButton.setOnClickListener(new View.OnClickListener() {
+        frag3.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                fragmentManager.beginTransaction()
+            public void onClick(View view) {
+                fg.beginTransaction()
                         .replace(R.id.fragmentContainerView, storyFragment.class, null)
                         .setReorderingAllowed(true)
-                        .addToBackStack("Showing Third")
+                        .addToBackStack("showingStory")
                         .commit();
             }
         });
     }
 
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu1, menu);
         return true;
     }
 
-    //still need the edit adverture part
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        SharedPreferences sp = getSharedPreferences("com.cs407.lab5_milestone1", Context.MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE);
         if (id == R.id.logout) {
             sp.edit().clear().apply();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-            return true;
-        } else if(id == R.id.edit) {
             return true;
         }
         return super.onOptionsItemSelected(item);

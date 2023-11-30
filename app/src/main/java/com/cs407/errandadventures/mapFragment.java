@@ -1,10 +1,12 @@
 package com.cs407.errandadventures;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -22,6 +24,8 @@ public class mapFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
 
     public mapFragment() {
         // Required empty public constructor
@@ -59,5 +63,15 @@ public class mapFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_map, container, false);
+    }
+
+    @Override
+    public void onRequestPermissionsResult (int code, @NonNull String[] permissions, @NonNull int[] result) {
+        super.onRequestPermissionsResult(code, permissions, result);
+        //if (code == ACCESS_LOCATION) {
+            if (result.length > 0 && result[0] == PackageManager.PERMISSION_GRANTED) {
+                //displayLoc();
+            }
+        //}
     }
 }
