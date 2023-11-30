@@ -103,6 +103,7 @@ public class Destinations extends Fragment {
 
         toDo = helper.readList(s);
         for (Stop stop:toDo) {
+
             display.add(String.format("%s", stop.getTask()));
         }
 
