@@ -25,13 +25,7 @@
         android:hint="User ID"
         />
 
-    <EditText
-        android:id="@+id/editTextTextPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPassword"
-        android:hint="password"/>
+
 
     <Button
         android:id="@+id/startButton"
