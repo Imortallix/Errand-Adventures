@@ -9,8 +9,8 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
-        android:layout_width="match_parent"
-        android:layout_height="664dp" />
+        android:layout_width="422dp"
+        android:layout_height="663dp" />
 
     <LinearLayout
         android:id="@+id/buttonsLayout"
@@ -39,5 +39,7 @@
             android:layout_weight="1"
             android:text="Story" />
     </LinearLayout>
+
+
 
 </LinearLayout>

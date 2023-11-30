@@ -30,8 +30,8 @@ public class Destinations extends Fragment {
     ListView listView;
 
     ArrayAdapter<String> adapter;
-
     ArrayList<String> displayList = new ArrayList<>();
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -75,7 +75,14 @@ public class Destinations extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragmen
-        return inflater.inflate(R.layout.fragment_destinations, container, false);
+        View view = inflater.inflate(R.layout.fragment_destinations, container, false);
+
+        listView = view.findViewById(R.id.list);
+        adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, displayList);
+        System.out.println(displayList);
+        listView.setAdapter(adapter);
+
+        return view;
     }
 
 
@@ -89,14 +96,18 @@ public class Destinations extends Fragment {
             @Override
             public void onClick(View v) {
                 EditText location = (EditText) getView().findViewById(R.id.location);
-                String l = location.getText().toString();
-                displayList.add(l);
+                String locationString = location.getText().toString();
+                EditText story = (EditText) getView().findViewById(R.id.story);
+                String storyString = story.getText().toString();
+                System.out.println(locationString);
+                displayList.add(String.format("Location:%s\nStory:%s\n", locationString, storyString));
+                System.out.println(displayList);
+                adapter.notifyDataSetChanged();
+
+
             }
         });
-        listView = view.findViewById(R.id.list);
-        adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, displayList);
-        System.out.println(displayList);
-        listView.setAdapter(adapter);
+
     }
 /*
     @Override
