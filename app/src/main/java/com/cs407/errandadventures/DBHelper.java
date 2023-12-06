@@ -28,8 +28,6 @@ public class DBHelper {
         int locationIndex = c.getColumnIndex("location");
         int latlngIndex = c.getColumnIndex("latlng");
 
-        //int titleIndex = c.getColumnIndex("title");
-        //int contextIndex = c.getColumnIndex("content");
         c.moveToFirst();
         ArrayList<Stop> toDoList = new ArrayList<>();
         while (!c.isAfterLast()) {

@@ -24,6 +24,7 @@ public class ErrandAdventureActivity extends AppCompatActivity {
         Button frag1 = findViewById(R.id.destinationsButton);
         Button frag2 = findViewById(R.id.mapButton);
         Button frag3 = findViewById(R.id.storyButton);
+
         frag1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,6 +57,12 @@ public class ErrandAdventureActivity extends AppCompatActivity {
                         .commit();
             }
         });
+        fg.beginTransaction()
+                .replace(R.id.fragmentContainerView, Destinations.class, null)
+                .setReorderingAllowed(true)
+                .addToBackStack("showingDestination")
+                .commit();
+
     }
 
     @Override
