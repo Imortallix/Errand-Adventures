@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -27,6 +28,8 @@ public class AddStop extends AppCompatActivity {
 
     private int id = -1;
     private String username;
+    private String location;
+    private String latlng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,7 @@ public class AddStop extends AppCompatActivity {
     }
 
     public void startAutocompleteActivity(View view) {
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+        List<Place.Field> fields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.ID, Place.Field.NAME);
 
         // Start the autocomplete intent.
         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
@@ -53,11 +56,15 @@ public class AddStop extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> startAutocomplete = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
+                TextView name = (TextView)findViewById(R.id.name);
                 if (result.getResultCode() == Activity.RESULT_OK) {
                     Intent intent = result.getData();
                     if (intent != null) {
                         Place place = Autocomplete.getPlaceFromIntent(intent);
-                        Log.i(TAG, "Place: ${place.getName()}, ${place.getId()}");
+                        Log.i(TAG, "Place: " + place.getName() + " " + place.getLatLng());
+                        name.setText("Location: " + place.getName());
+                        location = place.getName();
+                        latlng = place.getLatLng().toString();
                     }
                 } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
                     // The user canceled the operation.
@@ -75,9 +82,9 @@ public class AddStop extends AppCompatActivity {
         DBHelper helper = new DBHelper(database);
 
         if(id == -1) {
-            Log.i("info", "addstop"+task);
+            Log.i("info", "addstop"+ task + location + latlng);
 
-            helper.saveNote(username, task);
+            helper.saveStop(username, task, location, latlng);
 
         } else {
             //helper.update(username, date, title, content);

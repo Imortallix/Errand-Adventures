@@ -10,22 +10,23 @@ public class DBHelper {
     public DBHelper(SQLiteDatabase database) {this.database = database;}
 
     public static void createTable() {
-        database.execSQL("CREATE TABLE IF NOT EXISTS toDo"+
-                "(id INTEGER PRIMARY KEY, taskID INTEGER, username TEXT, task TEXT)");
+        database.execSQL("CREATE TABLE IF NOT EXISTS toDoDB"+
+                "(id INTEGER PRIMARY KEY, taskID INTEGER, username TEXT, task TEXT, location TEXT, latlng TEXT)");
     }
 
-    public void saveNote(String username, String task) {
+    public void saveStop(String username, String task, String location, String latlng) {
         createTable();
-        database.execSQL("INSERT INTO toDo(username, task) VALUES (?,?)",
-                new String[]{username, task});
+        database.execSQL("INSERT INTO toDoDB(username, task, location, latlng) VALUES (?,?,?,?)",
+                new String[]{username, task, location, latlng});
     }
 
     public ArrayList<Stop> readList(String username) {
         createTable();
-        Cursor c = database.rawQuery("SELECT * FROM toDo WHERE username LIKE ?",
-                new String[] {"%"+username+"%"});
-        int taskInde = c.getColumnIndex("username");
+        Cursor c = database.rawQuery("SELECT * FROM toDoDB WHERE username LIKE ?",
+                new String[] {"%"+username+"%"});;
         int taskIndex = c.getColumnIndex("task");
+        int locationIndex = c.getColumnIndex("location");
+        int latlngIndex = c.getColumnIndex("latlng");
 
         //int titleIndex = c.getColumnIndex("title");
         //int contextIndex = c.getColumnIndex("content");
@@ -33,9 +34,9 @@ public class DBHelper {
         ArrayList<Stop> toDoList = new ArrayList<>();
         while (!c.isAfterLast()) {
             String task = c.getString(taskIndex);
-            //String date = c.getString(dateIndex);
-            //String content = c.getString(contextIndex);
-            Stop stop = new Stop(username, task);
+            String location = c.getString(locationIndex);
+            String latlng = c.getString(latlngIndex);
+            Stop stop = new Stop(username, task, location, latlng);
             toDoList.add(stop);
             c.moveToNext();
         }

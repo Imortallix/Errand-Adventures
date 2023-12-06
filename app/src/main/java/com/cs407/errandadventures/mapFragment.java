@@ -1,6 +1,9 @@
 package com.cs407.errandadventures;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,7 +22,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
+
 public class mapFragment extends Fragment {
+
+    ArrayList<Stop> toDo = new ArrayList<>();
 
     private final LatLng mDestinationLatLng = new LatLng(43.0757, -89.4040);
     private GoogleMap mMap;
@@ -30,6 +37,21 @@ public class mapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Context context = getActivity().getApplicationContext();
+        SQLiteDatabase database = context.openOrCreateDatabase("toDo", Context.MODE_PRIVATE, null);
+        DBHelper helper = new DBHelper(database);
+
+        ArrayList<String> display = new ArrayList<>();
+
+        SharedPreferences sp = context.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE);
+        String s = sp.getString("username", "");
+        toDo = helper.readList(s);
+        for (Stop stop:toDo) {
+
+            display.add(String.format("%s", stop.getTask()));
+        }
+        System.out.println(display);
 
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 

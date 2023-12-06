@@ -102,10 +102,12 @@ public class Destinations extends Fragment {
         ArrayList<String> display = new ArrayList<>();
 
         toDo = helper.readList(s);
+        System.out.println("toDo: " + toDo);
         for (Stop stop:toDo) {
 
-            display.add(String.format("%s", stop.getTask()));
+            display.add(String.format("Location: %s\nTask: %s\n", stop.getLocation(), stop.getTask()));
         }
+        System.out.println("display" + display);
 
 
         listView = v.findViewById(R.id.listView);
