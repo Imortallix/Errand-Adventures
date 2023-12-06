@@ -62,7 +62,7 @@ public class AddStop extends AppCompatActivity {
                     if (intent != null) {
                         Place place = Autocomplete.getPlaceFromIntent(intent);
                         Log.i(TAG, "Place: " + place.getName() + " " + place.getLatLng());
-                        name.setText("Location: " + place.getName());
+                        name.setText(place.getName());
                         location = place.getName();
                         latlng = place.getLatLng().toString();
                     }
