@@ -82,6 +82,11 @@ public class ErrandAdventureActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        if (id == R.id.edit) {
+            Intent intent = new Intent(this, ErrandAdventureActivity.class);
+            startActivity(intent);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 }

@@ -17,8 +17,10 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -28,7 +30,6 @@ public class mapFragment extends Fragment {
 
     ArrayList<Stop> locations = new ArrayList<>();
 
-    private final LatLng mDestinationLatLng = new LatLng(43.0757, -89.4040);
     private GoogleMap mMap;
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -49,7 +50,7 @@ public class mapFragment extends Fragment {
         mFusedLocationProviderClient =
                 LocationServices.getFusedLocationProviderClient(getActivity());
 
-        // Return view 
+        // Return view
         return view;
     }
 
@@ -67,7 +68,11 @@ public class mapFragment extends Fragment {
                         if (task.isSuccessful() && mLastKnownLocation != null) {
                             mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()))
-                                    .title("Current"));
+                                    .title("Current")
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                    new LatLng(mLastKnownLocation.getLatitude(),
+                                            mLastKnownLocation.getLongitude()), 5));
                         }
                     });
         }
@@ -101,8 +106,8 @@ public class mapFragment extends Fragment {
                 mapFragment.getMapAsync(googleMap -> {
                     mMap = googleMap;
                     googleMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(Double.parseDouble(latlng[0]), Double.parseDouble(latlng[1])))
-                        .title(stop.getLocation()));
+                            .position(new LatLng(Double.parseDouble(latlng[0]), Double.parseDouble(latlng[1])))
+                            .title(stop.getLocation()));
                 });
             }
 
