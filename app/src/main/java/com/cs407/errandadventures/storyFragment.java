@@ -4,20 +4,19 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.location.CurrentLocationRequest;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
@@ -72,15 +71,26 @@ public class storyFragment extends Fragment {
             genBodyParagraph();
         }
 
-        // grab the current location
-        getLocation();
+        // getLocation() will handle the body button entirely as the body paragraphs are only revealed as the user reaches locations
+        Button bodyButton = view.findViewById(R.id.bodyButton);
+        bodyButton.setOnClickListener(v -> { getLocation(); });
 
-        updateText(view);
-    }
+        // set the intro and ending buttons
+        Button introButton = view.findViewById(R.id.introButton);
+        introButton.setOnClickListener(v -> {
+            stage = Stage.INTRO;
+            updateText();
+        });
+        Button endingButton = view.findViewById(R.id.endButton);
+        endingButton.setOnClickListener(v -> {
+            stage = Stage.ENDING;
+            updateText();
+        });
 
-    public void onDestroyView() {
-        super.onDestroyView();
-        mFusedLocationProviderClient.removeLocationUpdates(callback);
+        // set the text of the textview to the appropriate text
+        text = view.findViewById(R.id.storyText);
+
+        updateText();
     }
 
     private void getLocation() {
@@ -89,37 +99,7 @@ public class storyFragment extends Fragment {
         }
 
         // create the request, update every second
-        LocationRequest request = new LocationRequest.Builder(1000).build();
-
-        // callback for handling location updates
-        callback = new LocationCallback() {
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                // just in case something goes horribly wrong
-                if (locationResult == null) {
-                    return;
-                }
-                Location location = locationResult.getLastLocation();
-
-                for (int i = 0; i < stops.size(); i++) {
-                    // grab lat and lng for the stop
-                    String clean1 = stops.get(i).getLatLng().replace("lat/lng:", "");
-                    String clean2 = clean1.replace("(", "");
-                    String clean3 = clean2.replace(")", "").trim();
-                    String[] latlng = clean3.split(",");
-                    double lat = Double.parseDouble(latlng[0]);
-                    double lng = Double.parseDouble(latlng[1]);
-
-                    // if we are within 100 meters of a stop, change the paragraph to the correct body
-                    if (getDistance(location, lat, lng) < 100) {
-                        bodyIdx = i;
-                        stage = Stage.BODY;
-                        break;
-                    }
-                }
-
-            }
-        };
+        CurrentLocationRequest request = new CurrentLocationRequest.Builder().build();
 
         int permission = ActivityCompat.checkSelfPermission(getActivity(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION);
@@ -129,13 +109,31 @@ public class storyFragment extends Fragment {
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
 
-        mFusedLocationProviderClient.requestLocationUpdates(request, callback, Looper.getMainLooper());
+        mFusedLocationProviderClient.getCurrentLocation(request, null).addOnCompleteListener(getActivity(), task -> {
+            Location location = task.getResult();
+
+            for (int i = 0; i < stops.size(); i++) {
+                // grab lat and lng for the stop
+                String clean1 = stops.get(i).getLatLng().replace("lat/lng:", "");
+                String clean2 = clean1.replace("(", "");
+                String clean3 = clean2.replace(")", "").trim();
+                String[] latlng = clean3.split(",");
+                double lat = Double.parseDouble(latlng[0]);
+                double lng = Double.parseDouble(latlng[1]);
+
+                // if we are within 100 meters of a stop, change the paragraph to the correct body
+                if (getDistance(location, lat, lng) < 100) {
+                    bodyIdx = i;
+                    stage = Stage.BODY;
+                    break;
+                }
+            }
+            updateText();
+        });
 
     }
 
-    private void updateText(View view) {
-        // set the text of the textview to the appropriate text
-        text = view.findViewById(R.id.storyText);
+    private void updateText() {
         switch (stage) {
             case INTRO:
                 // set the text to the intro

@@ -11,8 +11,32 @@
     <TextView
         android:id="@+id/storyText"
         android:layout_width="346dp"
-        android:layout_height="match_parent"
+        android:layout_height="560dp"
         android:text="Here is the introduction to your story"
         android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/endButton"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:text="Show Ending" />
+
+        <Button
+            android:id="@+id/introButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Introduction" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bodyButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show Next Location" />
 
 </LinearLayout>
