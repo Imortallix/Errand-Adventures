@@ -1,17 +1,23 @@
 package com.cs407.errandadventures;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
@@ -45,6 +51,9 @@ public class storyFragment extends Fragment {
 
     // location provider
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private LocationCallback callback;
+
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 12;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -53,10 +62,6 @@ public class storyFragment extends Fragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        // TODO: update the story based on the user's location.  Need to implement callback
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        LocationRequest request = new LocationRequest.Builder(1000).build(); // update every second
-
         // get the stops from the database
         Context context = getActivity().getApplicationContext();
         DBHelper helper = new DBHelper(context.openOrCreateDatabase("toDo", Context.MODE_PRIVATE, null));
@@ -67,6 +72,68 @@ public class storyFragment extends Fragment {
             genBodyParagraph();
         }
 
+        // grab the current location
+        getLocation();
+
+        updateText(view);
+    }
+
+    public void onDestroyView() {
+        super.onDestroyView();
+        mFusedLocationProviderClient.removeLocationUpdates(callback);
+    }
+
+    private void getLocation() {
+        if (mFusedLocationProviderClient == null) {
+            mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        }
+
+        // create the request, update every second
+        LocationRequest request = new LocationRequest.Builder(1000).build();
+
+        // callback for handling location updates
+        callback = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                // just in case something goes horribly wrong
+                if (locationResult == null) {
+                    return;
+                }
+                Location location = locationResult.getLastLocation();
+
+                for (int i = 0; i < stops.size(); i++) {
+                    // grab lat and lng for the stop
+                    String clean1 = stops.get(i).getLatLng().replace("lat/lng:", "");
+                    String clean2 = clean1.replace("(", "");
+                    String clean3 = clean2.replace(")", "").trim();
+                    String[] latlng = clean3.split(",");
+                    double lat = Double.parseDouble(latlng[0]);
+                    double lng = Double.parseDouble(latlng[1]);
+
+                    // if we are within 100 meters of a stop, change the paragraph to the correct body
+                    if (getDistance(location, lat, lng) < 100) {
+                        bodyIdx = i;
+                        stage = Stage.BODY;
+                        break;
+                    }
+                }
+
+            }
+        };
+
+        int permission = ActivityCompat.checkSelfPermission(getActivity(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION);
+        if (permission == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+
+        mFusedLocationProviderClient.requestLocationUpdates(request, callback, Looper.getMainLooper());
+
+    }
+
+    private void updateText(View view) {
         // set the text of the textview to the appropriate text
         text = view.findViewById(R.id.storyText);
         switch (stage) {
@@ -78,8 +145,6 @@ public class storyFragment extends Fragment {
                 text.setText(intro);
                 break;
             case BODY:
-                assert body != null;
-                assert body.size() <= bodyIdx && bodyIdx >= 0;
                 text.setText(body.get(bodyIdx));
                 break;
             case ENDING:
@@ -92,18 +157,8 @@ public class storyFragment extends Fragment {
         }
     }
 
-    private void changeStage() {
-        switch (stage) {
-            case INTRO:
-                stage = Stage.BODY;
-                break;
-            case BODY:
-                stage = Stage.ENDING;
-                break;
-            case ENDING:
-                stage = Stage.INTRO;
-                break;
-        }
+    private double getDistance(Location location, double lat, double lng) {
+        return Math.sqrt(Math.pow(location.getLatitude() - lat, 2) + Math.pow(location.getLongitude() - lng, 2));
     }
 
     private void genBodyParagraph() {
