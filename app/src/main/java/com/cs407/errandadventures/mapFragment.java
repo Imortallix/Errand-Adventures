@@ -72,7 +72,7 @@ public class mapFragment extends Fragment {
                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
-                                            mLastKnownLocation.getLongitude()), 5));
+                                            mLastKnownLocation.getLongitude()), 10));
                         }
                     });
         }
@@ -95,13 +95,14 @@ public class mapFragment extends Fragment {
         SupportMapFragment mapFragment=(SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.map_fragment);
 
+        if (locations.size() != 0) {
         for (Stop stop:locations) {
-            if(stop.getLatLng() != (null)) {
+            if (stop.getLatLng() != (null)) {
                 String clean1 = stop.getLatLng().replace("lat/lng:", "");
                 String clean2 = clean1.replace("(", "");
                 String clean3 = clean2.replace(")", "").trim();
                 String[] latlng = clean3.split(",");
-                System.out.println("latlng: " + latlng[0] + " "  + latlng[1]);
+                System.out.println("latlng: " + latlng[0] + " " + latlng[1]);
 
                 mapFragment.getMapAsync(googleMap -> {
                     mMap = googleMap;
@@ -110,13 +111,21 @@ public class mapFragment extends Fragment {
                             .title(stop.getLocation()));
                 });
             }
-
-
-
-
-
         }
-    }
+        } else {
+                mapFragment.getMapAsync(googleMap -> {
+                    mMap = googleMap;
+
+                });
+            }
+        }
+
+
+
+
+
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
