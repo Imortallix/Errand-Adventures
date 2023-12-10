@@ -26,7 +26,6 @@ import java.util.List;
 
 public class AddStop extends AppCompatActivity {
 
-    private int id = -1;
     private String username;
     private String location;
     private String latlng;
@@ -72,6 +71,13 @@ public class AddStop extends AppCompatActivity {
                 }
             });
 
+
+    public void cancel(View view) {
+        Intent intent = new Intent(this, ErrandAdventureActivity.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
+    }
+
     public void done(View view) {
 
         EditText edit = findViewById(R.id.task);
@@ -81,19 +87,17 @@ public class AddStop extends AppCompatActivity {
         SQLiteDatabase database =context.openOrCreateDatabase("toDo", Context.MODE_PRIVATE, null);
         DBHelper helper = new DBHelper(database);
 
-        if(id == -1) {
-            Log.i("info", "addstop"+ task + location + latlng);
+        TextView cancelMessage = (TextView)findViewById(R.id.cmessage);
 
+        if(location != null && task != null) {
             helper.saveStop(username, task, location, latlng);
-
+            helper.database.close();
+            Intent intent = new Intent(this, ErrandAdventureActivity.class);
+            intent.putExtra("username", username);
+            startActivity(intent);
+            cancelMessage.setText("");
         } else {
-            //helper.update(username, date, title, content);
+            cancelMessage.setText("Location or Task is empty.");
         }
-
-        helper.database.close();
-        Intent intent = new Intent(this, ErrandAdventureActivity.class);
-        intent.putExtra("username", username);
-        startActivity(intent);
-
     }
 }
