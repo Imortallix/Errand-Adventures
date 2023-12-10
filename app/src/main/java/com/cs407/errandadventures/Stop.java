@@ -5,6 +5,8 @@ public class Stop {
     String username;
     String location;
     String latlng;
+    boolean checked;
+    int id;
 
     public Stop(String username, String task, String location, String latlng) {
         this.username = username;
@@ -21,4 +23,12 @@ public class Stop {
     public String getLocation() {return this.location;}
 
     public String getLatLng() {return this.latlng;}
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
 }

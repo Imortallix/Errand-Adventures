@@ -81,11 +81,8 @@ public class ErrandAdventureActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             return true;
-        }
-        if (id == R.id.edit) {
-            Intent intent = new Intent(this, ErrandAdventureActivity.class);
-            startActivity(intent);
-            return true;
+        } else if (id == R.id.restart) {
+            getApplicationContext().deleteDatabase("toDo");
         }
         return super.onOptionsItemSelected(item);
     }

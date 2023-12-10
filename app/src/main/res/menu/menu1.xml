@@ -4,8 +4,13 @@
     <item
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:title="Edit"
-        android:id="@+id/edit"/>
+        android:title="Map"
+        android:id="@+id/map"/>
+    <item
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Restart"
+        android:id="@+id/restart"/>
     <item
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
