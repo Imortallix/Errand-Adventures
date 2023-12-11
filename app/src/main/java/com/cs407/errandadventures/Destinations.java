@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
  * Use the {@link Destinations#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Destinations extends Fragment {
+public class Destinations extends Fragment{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -69,7 +70,6 @@ public class Destinations extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -102,28 +102,34 @@ public class Destinations extends Fragment {
         ArrayList<String> display = new ArrayList<>();
 
         toDo = helper.readList(s);
-        System.out.println("toDo: " + toDo);
         for (Stop stop:toDo) {
-
-            display.add(String.format("Location: %s\nTask: %s\n", stop.getLocation(), stop.getTask()));
+            display.add(String.format("Task: %s Location: %s", stop.getTask(), stop.getLocation()));
         }
-        System.out.println("display" + display);
-
 
         listView = v.findViewById(R.id.listView);
-        adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),R.layout.row, display);
+        adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_checked, display);
         listView.setAdapter(adapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new DoubleClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CheckedTextView v = (CheckedTextView) view;
-                v.setChecked(!v.isChecked());
+            public void onDoubleClick(AdapterView<?> parent, View v, int position, long id) {
+                Stop selected = toDo.get(position);
+                if(selected.isChecked() != true) {
+                    selected.setChecked(true);
+                    CheckedTextView item = (CheckedTextView) v;
+                    item.setChecked(true);
+                    Toast.makeText(getActivity().getApplicationContext(),"Congradulations, you have finished " + toDo.get(position).getTask(),Toast.LENGTH_SHORT).show();
+                    helper.deleteNote("none", selected.getLocation());
+                }
+            }
+            @Override
+            public void onSingleClick(AdapterView<?> parent, View v, int position, long id) {
+
             }
         });
 
 
-    }
 
+    }
 
 }

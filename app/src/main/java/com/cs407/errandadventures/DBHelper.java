@@ -43,5 +43,18 @@ public class DBHelper {
 
         return toDoList;
     }
+
+    public void deleteNote(String title, String location) {
+        createTable();
+        String task = "";
+        Cursor c = database.rawQuery("SELECT task FROM toDoDB WHERE location = ?",
+                new String[]{location});
+        if (c.moveToNext()) {
+            task = c.getString(0);
+        }
+        database.execSQL("DELETE FROM toDoDB WHERE location = ? AND task = ?",
+                new String[] {location, task});
+        c.close();
+    }
 }
 

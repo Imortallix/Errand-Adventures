@@ -29,6 +29,7 @@ public class AddStop extends AppCompatActivity {
     private String username;
     private String location;
     private String latlng;
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

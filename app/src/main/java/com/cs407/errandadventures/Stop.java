@@ -6,13 +6,13 @@ public class Stop {
     String location;
     String latlng;
     boolean checked;
-    int id;
 
     public Stop(String username, String task, String location, String latlng) {
         this.username = username;
         this.task = task;
         this.latlng = latlng;
         this.location = location;
+        this.checked = false;
     }
 
     public String getName() {
