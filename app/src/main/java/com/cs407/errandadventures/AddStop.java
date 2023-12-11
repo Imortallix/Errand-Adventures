@@ -85,13 +85,13 @@ public class AddStop extends AppCompatActivity {
         String task = edit.getText().toString();
 
         Context context = getApplicationContext();
-        SQLiteDatabase database =context.openOrCreateDatabase("toDo", Context.MODE_PRIVATE, null);
+        SQLiteDatabase database =context.openOrCreateDatabase("toDoDB", Context.MODE_PRIVATE, null);
         DBHelper helper = new DBHelper(database);
 
         TextView cancelMessage = (TextView)findViewById(R.id.cmessage);
 
         if(location != null && task != null) {
-            helper.saveStop(username, task, location, latlng);
+            helper.saveStop(username, task, location, latlng, "false");
             helper.database.close();
             Intent intent = new Intent(this, ErrandAdventureActivity.class);
             intent.putExtra("username", username);

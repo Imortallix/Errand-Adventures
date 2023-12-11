@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
@@ -34,8 +34,12 @@ public class Destinations extends Fragment{
     private static final String ARG_PARAM2 = "param2";
 
     private ListView listView;
-    public ArrayAdapter<String> adapter;
+    //public ArrayAdapter<String> adapter;
     ArrayList<Stop> toDo = new ArrayList<>();
+    SQLiteDatabase database;
+    String s;
+    Context context;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -70,6 +74,11 @@ public class Destinations extends Fragment{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        context = getActivity().getApplicationContext();
+        SharedPreferences sp = context.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE);
+        s = sp.getString("username", "");
+
+        database = context.openOrCreateDatabase("toDoDB", Context.MODE_PRIVATE, null);
     }
 
     @Override
@@ -81,9 +90,6 @@ public class Destinations extends Fragment{
 
     public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
 
-        Context context = getActivity().getApplicationContext();
-        SharedPreferences sp = context.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE);
-        String s = sp.getString("username", "");
 
         Button add = v.findViewById(R.id.addDestination);
         add.setOnClickListener(new View.OnClickListener() {
@@ -95,33 +101,38 @@ public class Destinations extends Fragment{
             }
         });
 
-
-        SQLiteDatabase database = context.openOrCreateDatabase("toDo", Context.MODE_PRIVATE, null);
         DBHelper helper = new DBHelper(database);
 
+
         ArrayList<String> display = new ArrayList<>();
+        ArrayList<String> checkList = new ArrayList<>();
 
         toDo = helper.readList(s);
         for (Stop stop:toDo) {
             display.add(String.format("Task: %s Location: %s", stop.getTask(), stop.getLocation()));
+            Log.i("info", stop.isChecked());
+            checkList.add(stop.isChecked());
         }
 
         listView = v.findViewById(R.id.listView);
-        adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_checked, display);
+        //adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_checked, display);
+        CustomAdapter adapter = new CustomAdapter(context, display, checkList);
         listView.setAdapter(adapter);
 
+
         listView.setOnItemClickListener(new DoubleClickListener() {
-            //when double clicking the item, the item is checked. And I deleted the item in database,
-            //so when you switch back from another fragment the task itself will be gone.
+
             @Override
             public void onDoubleClick(AdapterView<?> parent, View v, int position, long id) {
                 Stop selected = toDo.get(position);
-                if(selected.isChecked() != true) {
-                    selected.setChecked(true);
+                if(selected.isChecked() == "false") {
+                    helper.setCheck("true", selected.getTask(), selected.getLocation(),s);
                     CheckedTextView item = (CheckedTextView) v;
                     item.setChecked(true);
                     Toast.makeText(getActivity().getApplicationContext(),"Congradulations, you have finished " + toDo.get(position).getTask(),Toast.LENGTH_SHORT).show();
-                    helper.deleteNote("none", selected.getLocation());
+                    //helper.deleteNote("none", selected.getLocation());
+                } else {
+                    Log.i("info", "double not go through");
                 }
             }
             @Override
