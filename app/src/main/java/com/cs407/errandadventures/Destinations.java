@@ -111,6 +111,8 @@ public class Destinations extends Fragment{
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new DoubleClickListener() {
+            //when double clicking the item, the item is checked. And I deleted the item in database,
+            //so when you switch back from another fragment the task itself will be gone.
             @Override
             public void onDoubleClick(AdapterView<?> parent, View v, int position, long id) {
                 Stop selected = toDo.get(position);
