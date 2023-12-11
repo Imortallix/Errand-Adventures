@@ -85,7 +85,7 @@ public class AddStop extends AppCompatActivity {
         String task = edit.getText().toString();
 
         Context context = getApplicationContext();
-        SQLiteDatabase database =context.openOrCreateDatabase("toDoDB", Context.MODE_PRIVATE, null);
+        SQLiteDatabase database =context.openOrCreateDatabase("toDo", Context.MODE_PRIVATE, null);
         DBHelper helper = new DBHelper(database);
 
         TextView cancelMessage = (TextView)findViewById(R.id.cmessage);

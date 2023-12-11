@@ -78,7 +78,7 @@ public class Destinations extends Fragment{
         SharedPreferences sp = context.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE);
         s = sp.getString("username", "");
 
-        database = context.openOrCreateDatabase("toDoDB", Context.MODE_PRIVATE, null);
+        database = context.openOrCreateDatabase("toDo", Context.MODE_PRIVATE, null);
     }
 
     @Override
