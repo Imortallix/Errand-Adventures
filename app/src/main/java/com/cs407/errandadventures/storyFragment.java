@@ -133,7 +133,8 @@ public class storyFragment extends Fragment {
         // bodyButton.setOnClickListener(v -> { getLocation(); });
         bodyButton.setOnClickListener(v -> {
             stage = Stage.BODY;
-            bodyIdx = context.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE).getInt("completed", 0);
+            Context context1 = getActivity().getApplicationContext();
+            bodyIdx = context1.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE).getInt("completed", 0);
             updateText();
         });
 
