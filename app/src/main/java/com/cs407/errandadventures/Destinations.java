@@ -111,7 +111,7 @@ public class Destinations extends Fragment {
 
 
         listView = v.findViewById(R.id.listView);
-        adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_checked, display);
+        adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),R.layout.row, display);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
