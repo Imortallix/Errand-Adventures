@@ -37,15 +37,24 @@ public class CustomAdapter extends ArrayAdapter<String> {
         if (view == null) {
             view = inflter.inflate(R.layout.row, parent, false);
         }
-        ImageView image = view.findViewById(R.id.imageView);
+        Holder holder = new Holder();
+        holder.image = view.findViewById(R.id.imageView);
+
+        //ImageView image = view.findViewById(R.id.imageView);
         if(check.get(position).equals("true")) {
-            image.setImageDrawable(context.getDrawable(R.drawable.ic_check_foreground));
+            holder.image.setImageDrawable(context.getDrawable(R.drawable.ic_check_foreground));
         } else {
-            image.setImageDrawable(context.getDrawable(R.drawable.ic_uncheck_foreground));
+            holder.image.setImageDrawable(context.getDrawable(R.drawable.ic_uncheck_foreground));
         }
 
-        TextView textView1 = view.findViewById(R.id.item);
-        textView1.setText(names.get(position));
+        holder.item = view.findViewById(R.id.item);
+        holder.item.setText(names.get(position));
+        view.setTag(holder);
         return view;
     }
+    static class Holder {
+        ImageView image;
+        TextView item;
+    }
+
 }
