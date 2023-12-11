@@ -45,6 +45,9 @@ public class storyFragment extends Fragment {
     // list of the stops
     private ArrayList<Stop> stops;
 
+    // number of errands completed
+    private int completed;
+
     // the text displayed to the user
     private TextView text;
 
@@ -66,14 +69,73 @@ public class storyFragment extends Fragment {
         DBHelper helper = new DBHelper(context.openOrCreateDatabase("toDo", Context.MODE_PRIVATE, null));
         stops = helper.readList(context.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE).getString("username", ""));
 
+        /**
         // if stops were added, generate body paragraphs
         if (stops.size() > 0 && (body == null || stops.size() > body.size())) {
             genBodyParagraph();
         }
+         */
+
+        intro = "Mighty warrior! Thank you for coming to us in our time of need. The fire dragon " +
+                "Balthazar is terrorizing the city of Nosidam. You'll need to gather as many " +
+                "magical artifacts as you can before you can take it down.";
+
+        ending = "You did it! You used your magical artifacts and skill as warrior to slay the " +
+                "dragon Balthazar! You've saved the city of Nosidam and all its residents. " +
+                "May your name echo through the ages in songs and epics!";
+
+        body = new ArrayList<String>();
+        body.add("First you must delve into the Mines of Thoria. It is said they hold a weapon " +
+                "powerful enough to slay our foe.");
+        body.add("Aha! You've recovered Dragonbane, a sword sharp enough to pierce the " +
+                "thick hide of a drake! I doubt Balthazar will be happy to see this. " +
+                "Next you'll need to bargain with the elf smiths in Lorthen to forge " +
+                "you armor that will protect you in your battle.");
+        body.add("Wow! A shimmering set of Everscale! That should keep you safe from " +
+                "Balthazar's claws. I don't want to know what price you paid the elves " +
+                "for such a treasure. To protect you from his fire you'll need to seek " +
+                "out the Amulet of the Sunstone. Last I heard, it's hidden deep in the " +
+                "vaults of the mage guild.");
+        body.add("So you recovered the amulet! It's not as bright as I would have thought. " +
+                "I won't ask how you got it, but I doubt you should expect any help from " +
+                "those spellcasters in the future. The next thing you'll need is a potion " +
+                "of strength. Any potionmaker should be able to brew it, but I've been " +
+                "told the ingredients are tricky to acquire.");
+        body.add("What went into this thing? It smells like giant's toes and spider hair. " +
+                "Another artifcat that'll help you is the Ring of Quickwit, dragons are " +
+                "famous for their love of games and puzzles. It's the prize possession of " +
+                "the king's jester, and I imagine he'll challenge you to a game of " +
+                "riddles for it.");
+        body.add("Quite the shine you got on your hand now! I doubt I'll be exchanging " +
+                "banter with you anytime soon. If you really want to escape the battle " +
+                "with all your limbs, you could use the Shield of Galadon. It's the heirloom " +
+                "of the House of Galadon and said to protect its bearer against even the " +
+                "mightiest of blows. Only problem is its been missing for 500 years. With " +
+                "your skills though, I'm sure you can track it down; start by talking to the " +
+                "Lady Galadon, she might know where to start looking.");
+        body.add("Well I'll be! You found the shield! I'm sure House Galadon will be happy " +
+                "to see it protecting warriors in battle once more. If you're really serious " +
+                "about taking down Balthazar, you should read the Dragon Tome. It contains " +
+                "all sorts of secret, dragon-slaying knowledge. It was held in the Great " +
+                "Library until it was raided by goblins. You'll have to retrieve it from " +
+                "their stronghold in the Darkwood.");
+        body.add("I'm sure goblins are no problem for such a great warrior as yourself, " +
+                "but you're truly exceptional to storm their stronghold singlehandedly! " +
+                "The next items that will help you on your quest are the Boots of the " +
+                "Rivertreader. They'll ensure you're always quick and light on your feet. " +
+                "The river nayads hold them, waiting for a worthy bearer to pass their trials.");
+        body.add("Woah! Didn't hear you creep up on me with those new treads on! The " +
+                "next item to help you complete your quest is a belt from Colan the " +
+                "Leatherworker. They're not magic, but they look great and keep your pants up!");
 
         // getLocation() will handle the body button entirely as the body paragraphs are only revealed as the user reaches locations
         Button bodyButton = view.findViewById(R.id.bodyButton);
-        bodyButton.setOnClickListener(v -> { getLocation(); });
+        // bodyButton.setOnClickListener(v -> { getLocation(); });
+        bodyButton.setOnClickListener(v -> {
+            stage = Stage.BODY;
+            bodyIdx = context.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE).getInt("completed", 0);
+            updateText();
+        });
 
         // set the intro and ending buttons
         Button introButton = view.findViewById(R.id.introButton);
@@ -143,7 +205,12 @@ public class storyFragment extends Fragment {
                 text.setText(intro);
                 break;
             case BODY:
-                text.setText(body.get(bodyIdx));
+                if (bodyIdx >= body.size()) {
+                    text.setText("You've completed all the tasks you need to for now! Now " +
+                            "vanquish Balthazar and take some rest.");
+                } else {
+                    text.setText(body.get(bodyIdx));
+                }
                 break;
             case ENDING:
                 // set the text to the ending
