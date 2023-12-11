@@ -131,6 +131,9 @@ public class Destinations extends Fragment{
                     item.setChecked(true);
                     Toast.makeText(getActivity().getApplicationContext(),"Congradulations, you have finished " + toDo.get(position).getTask(),Toast.LENGTH_SHORT).show();
                     //helper.deleteNote("none", selected.getLocation());
+                    Context context = getActivity().getApplicationContext();
+                    SharedPreferences sp = context.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE);
+                    sp.edit().putInt("completed", sp.getInt("completed", 0) + 1);
                 } else {
                     Log.i("info", "double not go through");
                 }
