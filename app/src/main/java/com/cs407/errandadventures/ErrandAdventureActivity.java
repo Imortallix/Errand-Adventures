@@ -82,6 +82,7 @@ public class ErrandAdventureActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         } else if (id == R.id.restart) {
+            sp.edit().putInt("completed", 0).apply();
             getApplicationContext().deleteDatabase("toDo");
             Intent intent = new Intent(this, ErrandAdventureActivity.class);
             startActivity(intent);

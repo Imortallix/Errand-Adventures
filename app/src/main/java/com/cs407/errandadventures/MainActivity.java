@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         String s = edit.getText().toString();
         SharedPreferences sp = getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE);
         sp.edit().putString("username", s).apply();
+        sp.edit().putInt("completed", 0).apply();
         secondPage(s);
     }
 

@@ -117,6 +117,7 @@ public class Destinations extends Fragment{
             public void onDoubleClick(AdapterView<?> parent, View v, int position, long id) {
                 Stop selected = toDo.get(position);
                 if(selected.isChecked() != true) {
+                    sp.edit().putInt("completed", sp.getInt("completed", 0) + 1).apply();
                     selected.setChecked(true);
                     CheckedTextView item = (CheckedTextView) v;
                     item.setChecked(true);
