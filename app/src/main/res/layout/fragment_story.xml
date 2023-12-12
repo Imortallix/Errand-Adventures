@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
+    android:layout_height="wrap_content"
+    android:gravity="bottom|center_horizontal"
     android:orientation="vertical"
     tools:context=".storyFragment">
 
@@ -11,7 +11,7 @@
     <TextView
         android:id="@+id/storyText"
         android:layout_width="346dp"
-        android:layout_height="560dp"
+        android:layout_height="604dp"
         android:text="Here is the introduction to your story"
         android:textSize="20sp" />
 
@@ -21,22 +21,16 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/endButton"
+            android:id="@+id/backButton"
             android:layout_width="210dp"
             android:layout_height="wrap_content"
-            android:text="Show Ending" />
+            android:text="Go Back" />
 
         <Button
-            android:id="@+id/introButton"
+            android:id="@+id/nextButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Show Introduction" />
+            android:text="Next" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/bodyButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Show Next Location" />
 
 </LinearLayout>

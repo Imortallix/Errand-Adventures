@@ -86,7 +86,7 @@ public class ErrandAdventureActivity extends AppCompatActivity {
             getApplicationContext().deleteDatabase("toDo");
             Intent intent = new Intent(this, ErrandAdventureActivity.class);
             startActivity(intent);
-            sp.edit().putInt("completed", 0);
+            sp.edit().putInt("completed", 0).apply();
             return true;
         }
         return super.onOptionsItemSelected(item);

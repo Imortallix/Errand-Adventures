@@ -38,7 +38,9 @@ public class storyFragment extends Fragment {
     // each paragraph is separated into their own string.  This should make it easier to reveal
     // paragraphs one at a time as the user progresses through the story
     private ArrayList<String> body;
-    private int bodyIdx = 0;
+    private int bodyIndex;
+    private int maxIndex;
+
     // ending paragraph
     private String ending;
 
@@ -65,7 +67,9 @@ public class storyFragment extends Fragment {
         Context context = getActivity().getApplicationContext();
         DBHelper helper = new DBHelper(context.openOrCreateDatabase("toDo", Context.MODE_PRIVATE, null));
         stops = helper.readList(context.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE).getString("username", ""));
-        bodyIdx = context.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE).getInt("completed", 0);
+        maxIndex = context.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE).getInt("completed", 0);
+        bodyIndex = maxIndex - 1;
+        stage = Stage.INTRO;
 
         // if stops were added, generate body paragraphs
         if (stops.size() > 0 && (body == null || stops.size() > body.size())) {
@@ -119,25 +123,29 @@ public class storyFragment extends Fragment {
                 "next item to help you complete your quest is a belt from Colan the " +
                 "Leatherworker. They're not magic, but they look great and keep your pants up!");
 
-        // getLocation() will handle the body button entirely as the body paragraphs are only revealed as the user reaches locations
-        Button bodyButton = view.findViewById(R.id.bodyButton);
-        // bodyButton.setOnClickListener(v -> { getLocation(); });
-        bodyButton.setOnClickListener(v -> {
-            Context context2 = getActivity().getApplicationContext();
-            bodyIdx = context2.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE).getInt("completed", 0);
-            stage = Stage.BODY;
-            updateText();
-        });
-
         // set the intro and ending buttons
-        Button introButton = view.findViewById(R.id.introButton);
-        introButton.setOnClickListener(v -> {
-            stage = Stage.INTRO;
+        Button nextButton = view.findViewById(R.id.nextButton);
+        nextButton.setOnClickListener(v -> {
+            Context context2 = getActivity().getApplicationContext();
+            maxIndex = context2.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE).getInt("completed", 0);
+            if (bodyIndex < maxIndex) {
+                bodyIndex++;
+                stage = Stage.BODY;
+            } else {
+                stage = Stage.ENDING;
+            }
             updateText();
         });
-        Button endingButton = view.findViewById(R.id.endButton);
-        endingButton.setOnClickListener(v -> {
-            stage = Stage.ENDING;
+        Button backButton = view.findViewById(R.id.backButton);
+        backButton.setOnClickListener(v -> {
+            if (bodyIndex > -1) {
+                bodyIndex--;
+            }
+            if (bodyIndex < 0){
+                stage = Stage.INTRO;
+            } else {
+                stage = Stage.BODY;
+            }
             updateText();
         });
 
@@ -177,7 +185,7 @@ public class storyFragment extends Fragment {
 
                 // if we are within 100 meters of a stop, change the paragraph to the correct body
                 if (getDistance(location, lat, lng) < 100) {
-                    bodyIdx = i;
+                    bodyIndex = i;
                     stage = Stage.BODY;
                     break;
                 }
@@ -197,8 +205,8 @@ public class storyFragment extends Fragment {
                 text.setText(intro);
                 break;
             case BODY:
-                if (bodyIdx < body.size()) {
-                    text.setText(body.get(bodyIdx));
+                if (bodyIndex < body.size()) {
+                    text.setText(body.get(bodyIndex));
                 } else {
                     text.setText("You've done a lot of adventuring today. I think you're ready for the end of your quest!");
                 }
@@ -208,7 +216,7 @@ public class storyFragment extends Fragment {
                 if (ending == null || ending.isEmpty()) {
                     ending = "PLACEHOLDER ENDING";
                 }
-                if (bodyIdx < 2) {
+                if (bodyIndex < 2) {
                     ending = "You haven't done much adventuring yet, I'm not sure you're ready to face Balthazar.";
                 } else {
                     ending = "You did it! You used your magical artifacts and skill as a warrior to slay the " +
