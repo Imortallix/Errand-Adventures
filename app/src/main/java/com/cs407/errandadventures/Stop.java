@@ -25,4 +25,5 @@ public class Stop {
     public String getLatLng() {return this.latlng;}
 
     public String isChecked() {return checked;}
+    public void setChecked(String checked) {this.checked = checked;}
 }

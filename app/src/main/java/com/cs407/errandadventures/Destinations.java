@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -73,11 +74,6 @@ public class Destinations extends Fragment{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        context = getActivity().getApplicationContext();
-        SharedPreferences sp = context.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE);
-        s = sp.getString("username", "");
-
-        database = context.openOrCreateDatabase("toDoDB", Context.MODE_PRIVATE, null);
     }
 
     @Override
@@ -88,6 +84,11 @@ public class Destinations extends Fragment{
     }
 
     public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
+        context = getActivity().getApplicationContext();
+        SharedPreferences sp = context.getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE);
+        s = sp.getString("username", "");
+
+        database = context.openOrCreateDatabase("toDo", Context.MODE_PRIVATE, null);
 
 
         Button add = v.findViewById(R.id.addDestination);
@@ -108,11 +109,13 @@ public class Destinations extends Fragment{
 
         toDo = helper.readList(s);
         for (Stop stop:toDo) {
-            display.add(String.format("Task: %s \nLocation: %s", stop.getTask(), stop.getLocation()));
+            display.add(String.format("Task: %s Location: %s", stop.getTask(), stop.getLocation()));
+            Log.i("info", stop.isChecked());
             checkList.add(stop.isChecked());
         }
 
         listView = v.findViewById(R.id.listView);
+        //adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_checked, display);
         CustomAdapter adapter = new CustomAdapter(context, display, checkList);
         listView.setAdapter(adapter);
 
@@ -120,23 +123,28 @@ public class Destinations extends Fragment{
         listView.setOnItemClickListener(new DoubleClickListener() {
 
             @Override
-            public void onDoubleClick(AdapterView<?> parent, View v, int position, long id) {
-
+            public void onDoubleClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i("info", "double");
                 Stop selected = toDo.get(position);
-                if(selected.isChecked().equals("false")) {
-                    helper.setCheck("true", selected.getTask(), selected.getLocation(),s);
-                    CustomAdapter.Holder holder = (CustomAdapter.Holder) v.getTag();
-                    holder.image.setImageDrawable(context.getDrawable(R.drawable.ic_check_foreground));
-                    Toast.makeText(getActivity().getApplicationContext(),"Congradulations, you have finished " + toDo.get(position).getTask(),Toast.LENGTH_SHORT).show();
-                } else {
-                    helper.setCheck("false", selected.getTask(), selected.getLocation(),s);
-                    CustomAdapter.Holder holder = (CustomAdapter.Holder) v.getTag();
-                    holder.image.setImageDrawable(context.getDrawable(R.drawable.ic_uncheck_foreground));
-                }
+                helper.deleteNote(selected.getTask(), selected.getLocation());
+                onViewCreated(v, null);
             }
             @Override
-            public void onSingleClick(AdapterView<?> parent, View v, int position, long id) {
-                Toast.makeText(getActivity().getApplicationContext(),"single",Toast.LENGTH_SHORT).show();
+            public void onSingleClick(AdapterView<?> parent, View view, int position, long id) {
+                ImageView image = (ImageView) view.getTag();
+                Stop selected = toDo.get(position);
+                if(selected.isChecked().equals( "false")) {
+                    sp.edit().putInt("completed", sp.getInt("completed", 0) + 1).apply();
+                    helper.setCheck("true", selected.getTask(), selected.getLocation(),s);
+                    image.setImageDrawable(getActivity().getDrawable(R.drawable.ic_check_foreground));
+                    Toast.makeText(getActivity().getApplicationContext(),"Congradulations, you have finished " + toDo.get(position).getTask(),Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.i("info", "single not go through");
+                    helper.setCheck("false", selected.getTask(), selected.getLocation(),s);
+                    image.setImageDrawable(getActivity().getDrawable(R.drawable.ic_uncheck_foreground));
+                }
+                onViewCreated(v, null);
+
             }
         });
 
