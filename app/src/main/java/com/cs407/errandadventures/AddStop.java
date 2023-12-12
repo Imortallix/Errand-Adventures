@@ -91,7 +91,7 @@ public class AddStop extends AppCompatActivity {
         TextView cancelMessage = (TextView)findViewById(R.id.cmessage);
 
         if(location != null && task != null) {
-            helper.saveStop(username, task, location, latlng);
+            helper.saveStop(username, task, location, latlng, "false");
             helper.database.close();
             Intent intent = new Intent(this, ErrandAdventureActivity.class);
             intent.putExtra("username", username);

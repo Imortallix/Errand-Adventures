@@ -5,14 +5,14 @@ public class Stop {
     String username;
     String location;
     String latlng;
-    boolean checked;
+    String checked;
 
-    public Stop(String username, String task, String location, String latlng) {
+    public Stop(String username, String task, String location, String latlng, String checked) {
         this.username = username;
         this.task = task;
         this.latlng = latlng;
         this.location = location;
-        this.checked = false;
+        this.checked = checked;
     }
 
     public String getName() {
@@ -24,11 +24,5 @@ public class Stop {
 
     public String getLatLng() {return this.latlng;}
 
-    public boolean isChecked() {
-        return checked;
-    }
-
-    public void setChecked(boolean checked) {
-        this.checked = checked;
-    }
+    public String isChecked() {return checked;}
 }
