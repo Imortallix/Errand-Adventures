@@ -20,6 +20,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -55,6 +56,15 @@ public class mapFragment extends Fragment {
     }
 
     private void displayMyLocation() {
+        SharedPreferences sp = getActivity().getSharedPreferences("com.cs407.errandadventures", Context.MODE_PRIVATE);
+        String ava = sp.getString("avatar", "");
+        BitmapDescriptor avatar = null;
+        if (ava.equals("duck")) {
+            avatar = BitmapDescriptorFactory.fromResource(R.mipmap.ic_sduck_foreground);
+        } else {
+            avatar = BitmapDescriptorFactory.fromResource(R.mipmap.ic_speng_foreground);
+        }
+
         int permission = ActivityCompat.checkSelfPermission(getActivity(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION);
         if (permission == PackageManager.PERMISSION_DENIED) {
@@ -62,6 +72,7 @@ public class mapFragment extends Fragment {
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         } else {
+            BitmapDescriptor finalAvatar = avatar;
             mFusedLocationProviderClient.getLastLocation()
                     .addOnCompleteListener(getActivity(), task -> {
                         Location mLastKnownLocation = task.getResult();
@@ -69,7 +80,7 @@ public class mapFragment extends Fragment {
                             mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()))
                                     .title("Current")
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                                    .icon(finalAvatar));
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
                                             mLastKnownLocation.getLongitude()), 10));
