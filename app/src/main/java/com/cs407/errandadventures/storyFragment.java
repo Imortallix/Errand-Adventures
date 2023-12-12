@@ -123,7 +123,7 @@ public class storyFragment extends Fragment {
                 "next item to help you complete your quest is a belt from Colan the " +
                 "Leatherworker. They're not magic, but they look great and keep your pants up!");
 
-        // set the intro and ending buttons
+        // set the back and next buttons
         Button nextButton = view.findViewById(R.id.nextButton);
         nextButton.setOnClickListener(v -> {
             Context context2 = getActivity().getApplicationContext();
@@ -217,7 +217,7 @@ public class storyFragment extends Fragment {
                     ending = "PLACEHOLDER ENDING";
                 }
                 if (bodyIndex < 2) {
-                    ending = "You haven't done much adventuring yet, I'm not sure you're ready to face Balthazar.";
+                    ending = "You haven't done much adventuring yet, You'll have to collect more artifacts before facing Balthazar.";
                 } else {
                     ending = "You did it! You used your magical artifacts and skill as a warrior to slay the " +
                             "dragon Balthazar! You've saved the city of Nosidam and all its residents. " +
