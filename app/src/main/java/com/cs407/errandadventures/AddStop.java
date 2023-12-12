@@ -44,6 +44,7 @@ public class AddStop extends AppCompatActivity {
 
     }
 
+    // cade adapted from https://developers.google.com/maps/documentation/places/android-sdk/autocomplete
     public void startAutocompleteActivity(View view) {
         List<Place.Field> fields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.ID, Place.Field.NAME);
 
