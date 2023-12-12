@@ -109,13 +109,12 @@ public class Destinations extends Fragment{
 
         toDo = helper.readList(s);
         for (Stop stop:toDo) {
-            display.add(String.format("Task: %s Location: %s", stop.getTask(), stop.getLocation()));
+            display.add(String.format("Task: %s \n Location: %s", stop.getTask(), stop.getLocation()));
             Log.i("info", stop.isChecked());
             checkList.add(stop.isChecked());
         }
 
         listView = v.findViewById(R.id.listView);
-        //adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_checked, display);
         CustomAdapter adapter = new CustomAdapter(context, display, checkList);
         listView.setAdapter(adapter);
 
@@ -124,7 +123,7 @@ public class Destinations extends Fragment{
 
             @Override
             public void onDoubleClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("info", "double");
+                //Log.i("info", "double");
                 Stop selected = toDo.get(position);
                 helper.deleteNote(selected.getTask(), selected.getLocation());
                 onViewCreated(v, null);
@@ -137,7 +136,7 @@ public class Destinations extends Fragment{
                     sp.edit().putInt("completed", sp.getInt("completed", 0) + 1).apply();
                     helper.setCheck("true", selected.getTask(), selected.getLocation(),s);
                     image.setImageDrawable(getActivity().getDrawable(R.drawable.ic_check_foreground));
-                    Toast.makeText(getActivity().getApplicationContext(),"Congradulations, you have finished " + toDo.get(position).getTask(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(),"Congratulations, you have finished " + toDo.get(position).getTask(),Toast.LENGTH_SHORT).show();
                 } else {
                     Log.i("info", "single not go through");
                     helper.setCheck("false", selected.getTask(), selected.getLocation(),s);
@@ -147,9 +146,6 @@ public class Destinations extends Fragment{
 
             }
         });
-
-
-
     }
 
 }
