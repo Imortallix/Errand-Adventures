@@ -128,8 +128,9 @@ public class mapFragment extends Fragment {
                     mMap = googleMap;
 
                 });
-            }
         }
+        this.displayMyLocation();
+    }
 
 
 
